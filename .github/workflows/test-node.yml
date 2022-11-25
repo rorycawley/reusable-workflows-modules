@@ -1,4 +1,4 @@
-name: Node build, lint and test
+name: Node build and test
 on:
   workflow_call:
     inputs:
