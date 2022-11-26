@@ -4,6 +4,9 @@ on:
     inputs:
       install_node:
         type: boolean
+      environment:
+        required: true
+        type: string
       name:
         required: false
         type: string
@@ -17,8 +20,8 @@ jobs:
   deploy-code:
     runs-on: ubuntu-latest
     environment:
-      name: dev
-      url: https://dev.example.com      
+      name: ${{ inputs.environment }}
+      url: https://${{ inputs.environment }}.example.com      
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
