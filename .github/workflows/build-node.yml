@@ -1,0 +1,32 @@
+name: Node build
+on:
+  workflow_call:
+    inputs:
+      install_node:
+        type: boolean
+      name:
+        required: false
+        type: string
+      description:
+        required: false
+        type: string
+      script:
+        required: false
+        type: string
+jobs:
+  test-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+          cache: "npm"
+
+      - name: Doing install
+        run: npm ci
+      - name: Build package
+        run: npm run build --if-present
