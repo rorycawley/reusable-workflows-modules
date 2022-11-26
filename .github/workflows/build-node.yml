@@ -28,5 +28,6 @@ jobs:
 
       - name: Doing install
         run: npm ci
+        
       - name: Build package
         run: npm run build --if-present
