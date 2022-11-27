@@ -25,8 +25,16 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: "npm"
+          
+      - name: Cache NPM dependencies # we use actions/cache to cache the node_modules directory. We use the hash from the package-lock.json file as the key
+        uses: actions/cache@v3
+        id: cache-primes
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json')
 
-      - name: Doing install
+      - name: Install dependencies # we only install dependencies if the cache is invalidated
+        if: steps.cache-primes.outputs.cache-hit != 'true'
         run: npm ci
         
       - name: Build package
