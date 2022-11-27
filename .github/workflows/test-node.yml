@@ -13,6 +13,7 @@ on:
       script:
         required: false
         type: string
+        
 jobs:
   test-code:
     runs-on: ubuntu-latest
@@ -31,6 +32,10 @@ jobs:
         
       - name: Build package
         run: npm run build --if-present
+        env:
+          CI: true        
         
       - name: Running tests
         run: npm test
+        env:
+          CI: true
