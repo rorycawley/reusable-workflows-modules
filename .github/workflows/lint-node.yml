@@ -28,5 +28,8 @@ jobs:
 
       - name: Doing install
         run: npm ci
+        
       - name: Running linter
         run: npm run lint
+        env:
+          CI: true
