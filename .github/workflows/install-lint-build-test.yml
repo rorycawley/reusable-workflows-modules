@@ -1,0 +1,27 @@
+name: Node lint
+on:
+  workflow_call:
+    inputs:
+      install_node:
+        type: boolean
+      name:
+        required: false
+        type: string
+      description:
+        required: false
+        type: string
+      script:
+        required: false
+        type: string
+jobs:
+  install:
+    uses: rorycawley/reusable-workflows-modules/.github/workflows/install-deps-node.yml@main
+  lint:
+    needs: [install]
+    uses: rorycawley/reusable-workflows-modules/.github/workflows/lint-node.yml@main
+  build:
+    needs: [lint]
+    uses: rorycawley/reusable-workflows-modules/.github/workflows/build-node.yml@main
+  test:
+    needs: [build]
+    uses: rorycawley/reusable-workflows-modules/.github/workflows/test-node.yml@main
