@@ -26,19 +26,15 @@ jobs:
           node-version-file: .nvmrc
           cache: "npm"
 
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: echo "::set-output name=dir::$(npm config get cache)"
-
-      - uses: actions/cache@v3
-        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+      - name: Cache NPM dependencies # we use actions/cache to cache the node_modules directory. We use the hash from the package-lock.json file as the key
+        uses: actions/cache@v3
+        id: cache-primes
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
+          path: node_modules
+          key: ${{ runner.os }}-npm-v3-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies # we only install dependencies if the cache is invalidated
-        if: steps.npm-cache.outputs.cache-hit != 'true'
+        if: steps.cache-primes.outputs.cache-hit != 'true'
         run: npm ci
         
       - name: Build package
