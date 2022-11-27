@@ -1,4 +1,4 @@
-name: Node lint
+name: Node install, lint, build, test
 on:
   workflow_call:
     inputs:
@@ -15,13 +15,24 @@ on:
         type: string
 jobs:
   install:
-    uses: rorycawley/reusable-workflows-modules/.github/workflows/install-deps-node.yml@main
-  lint:
-    needs: [install]
-    uses: rorycawley/reusable-workflows-modules/.github/workflows/lint-node.yml@main
-  build:
-    needs: [lint]
-    uses: rorycawley/reusable-workflows-modules/.github/workflows/build-node.yml@main
-  test:
-    needs: [build]
-    uses: rorycawley/reusable-workflows-modules/.github/workflows/test-node.yml@main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+          cache: "npm"
+          
+      - name: Cache NPM dependencies # we use actions/cache to cache the node_modules directory. We use the hash from the package-lock.json file as the key
+        uses: actions/cache@v3
+        id: cache-primes
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-npm-v3-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies # we only install dependencies if the cache is invalidated
+        if: steps.cache-primes.outputs.cache-hit != 'true'
+        run: npm ci
