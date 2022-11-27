@@ -41,3 +41,13 @@ jobs:
         run: npm run build --if-present
         env:
           CI: true
+            
+      - name: Running linter
+        run: npm run lint
+        env:
+          CI: true
+            
+      - name: Running tests
+        run: npm test
+        env:
+          CI: true
