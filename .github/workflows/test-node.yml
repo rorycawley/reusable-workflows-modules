@@ -27,7 +27,8 @@ jobs:
           node-version-file: .nvmrc
           cache: "npm"
 
-      - name: Doing install
+      - name: Install dependencies # we only install dependencies if the cache is invalidated
+        if: steps.cache-primes.outputs.cache-hit != 'true'
         run: npm ci
         
       - name: Build package
