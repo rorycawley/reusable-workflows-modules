@@ -17,6 +17,13 @@ on:
         required: false
         type: string
 jobs:
+  lint:
+    uses: rorycawley/reusable-workflows-modules/.github/workflows/lint-node.yml@main
+  build:
+    uses: rorycawley/reusable-workflows-modules/.github/workflows/build-node.yml@main
+  test:
+    uses: rorycawley/reusable-workflows-modules/.github/workflows/test-node.yml@main
+    
   deploy-code:
     runs-on: ubuntu-latest
     environment:
