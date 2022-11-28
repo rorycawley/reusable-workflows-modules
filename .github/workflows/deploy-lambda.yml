@@ -1,0 +1,55 @@
+name: Node deploy to AWS lambda
+on:
+  workflow_call:
+    inputs:
+      install_node:
+        type: boolean
+      environment:
+        required: true
+        type: string
+      name:
+        required: false
+        type: string
+      description:
+        required: false
+        type: string
+      script:
+        required: false
+        type: string
+
+jobs:          
+  deploy-lambda:
+    name: Deploy to development
+    runs-on: ubuntu-22.04
+    environment:
+      name: ${{ inputs.environment }}
+      url: https://${{ inputs.environment }}.example.com 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+          cache: "npm"
+
+      - name: Cache NPM dependencies # we use actions/cache to cache the node_modules directory. We use the hash from the package-lock.json file as the key
+        uses: actions/cache@v3
+        id: cache-primes
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-npm-v3-${{ hashFiles('package-lock.json') }}
+
+      - name: Doing install
+        run: npm ci
+        
+      - name: Build package
+        run: npm run build --if-present
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16      
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}     
