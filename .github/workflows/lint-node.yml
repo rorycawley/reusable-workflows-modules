@@ -15,9 +15,10 @@ on:
         type: string
 jobs:
   lint-code:
-    runs-on: ubuntu-latest
+    name: Lint
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Install node
@@ -32,12 +33,14 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-v3-${{ hashFiles('package-lock.json') }}
-          
+
       - name: Install dependencies # we only install dependencies if the cache is invalidated
         if: steps.cache-primes.outputs.cache-hit != 'true'
         run: npm ci
-        
-      - name: Running linter
+        env:
+          CI: true
+
+      - name: Lint
         run: npm run lint
         env:
           CI: true
