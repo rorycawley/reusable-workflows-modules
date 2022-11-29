@@ -19,7 +19,7 @@ on:
 
 jobs:          
   deploy-lambda:
-    name: Deploy to development
+    name: Deploy to ${{ inputs.environment }}
     runs-on: ubuntu-22.04
     environment:
       name: ${{ inputs.environment }}
