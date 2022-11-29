@@ -40,7 +40,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies # we only install dependencies if the cache is invalidated
-        if: steps.npm-cache.outputs.cache-hit != 'true'
+#         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci
         env:
           CI: true
